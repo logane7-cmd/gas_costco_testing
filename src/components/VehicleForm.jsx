@@ -1,28 +1,28 @@
-import { useState } from 'react'
 import Input from './ui/Input'
 import Button from './ui/Button'
 
 /**
  * VehicleForm Component
  *
- * NOTE: This is a basic implementation for Phase 2.
- * Phase 3 will add:
- * - State management via useLocalStorage hook
- * - Real-time validation (tank: 1-50 gal, MPG: 1-150)
- * - localStorage auto-save with debouncing
- * - Google search button functionality (opens new tab with tank size query)
+ * Phase 3 implementation with:
+ * - Controlled components using props from App.jsx
+ * - Google search button for tank size lookup
+ * - Real-time state updates via onChange callback
+ *
+ * Phase 4 will add:
+ * - Inline validation error messages
+ * - Enhanced error handling
+ *
+ * @param {Object} props
+ * @param {Object} props.vehicleData - Current vehicle data { name, tankSize, mpg }
+ * @param {Function} props.onChange - Callback for field changes: (field, value) => void
  */
-
-function VehicleForm() {
-  // Temporary local state - will be replaced with useLocalStorage in Phase 3
-  const [vehicleName, setVehicleName] = useState('')
-  const [tankSize, setTankSize] = useState('')
-  const [mpg, setMpg] = useState('')
-
+function VehicleForm({ vehicleData = { name: '', tankSize: '', mpg: '' }, onChange }) {
   const handleGoogleSearch = () => {
-    // Phase 3: Implement Google search for tank size
-    // URL format: https://google.com/search?q=${encodeURIComponent(vehicleName)}+gas+tank+size
-    console.log('Google search will be implemented in Phase 3')
+    if (vehicleData.name) {
+      const query = encodeURIComponent(`${vehicleData.name} gas tank size`)
+      window.open(`https://google.com/search?q=${query}`, '_blank', 'noopener,noreferrer')
+    }
   }
 
   return (
@@ -32,8 +32,8 @@ function VehicleForm() {
       <Input
         label="Vehicle Name"
         type="text"
-        value={vehicleName}
-        onChange={(e) => setVehicleName(e.target.value)}
+        value={vehicleData.name}
+        onChange={(e) => onChange('name', e.target.value)}
         placeholder="e.g., Honda Civic"
         maxLength={50}
       />
@@ -43,8 +43,8 @@ function VehicleForm() {
           <Input
             label="Tank Size (gallons)"
             type="number"
-            value={tankSize}
-            onChange={(e) => setTankSize(e.target.value)}
+            value={vehicleData.tankSize}
+            onChange={(e) => onChange('tankSize', e.target.value)}
             placeholder="12.5"
             min={1}
             max={50}
@@ -55,7 +55,7 @@ function VehicleForm() {
         <Button
           onClick={handleGoogleSearch}
           variant="secondary"
-          disabled={!vehicleName}
+          disabled={!vehicleData.name}
           className="mb-1"
           title="Search for tank size"
         >
@@ -66,8 +66,8 @@ function VehicleForm() {
       <Input
         label="MPG (Miles Per Gallon)"
         type="number"
-        value={mpg}
-        onChange={(e) => setMpg(e.target.value)}
+        value={vehicleData.mpg}
+        onChange={(e) => onChange('mpg', e.target.value)}
         placeholder="30"
         min={1}
         max={150}

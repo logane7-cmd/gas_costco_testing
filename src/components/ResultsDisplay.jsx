@@ -1,23 +1,56 @@
 /**
  * ResultsDisplay Component
  *
- * NOTE: This is a placeholder implementation for Phase 2.
- * Phase 3 will add:
- * - Real-time calculation using calculator.js utility
- * - Trade-off question formatting (3 scenarios):
- *   1. Costco cheaper but farther: "Would you trade X minutes for $Y savings?"
- *   2. Local cheaper and closer: "Local is cheaper by $X and Y minutes closer"
- *   3. Equal cost (within $0.10): "Both cost ~$X, but [station] takes Y more minutes"
- * - Conditional display (hide if any field invalid or empty)
- * - Colored highlights (green for savings, blue for time)
- * - Large, prominent text (text-2xl or text-3xl)
+ * Phase 3 implementation with:
+ * - Real-time calculation display
+ * - Trade-off question formatting with colored highlights
+ * - Conditional rendering based on calculation availability
  *
- * @param {object} comparison - Calculation results (will come from App.jsx in Phase 3)
+ * Displays 3 types of messages:
+ * 1. Cheaper but farther: "Would you trade X minutes for $Y savings?"
+ * 2. Cheaper and closer: "Station is cheaper by $X and Y minutes closer"
+ * 3. Equal cost: "Both cost ~$X, but [station] takes Y more minutes"
+ *
+ * @param {Object} props
+ * @param {Object} props.calculation - Calculation results from App.jsx
+ * @param {string} props.calculation.message - Formatted trade-off message
+ * @param {Object} props.calculation.comparison - Comparison data with savings and timeDiff
  */
+function ResultsDisplay({ calculation }) {
+  // Helper function to highlight dollar amounts in green
+  const highlightDollars = (text) => {
+    return text.split(/(\$[\d.]+)/).map((part, index) => {
+      if (part.match(/\$[\d.]+/)) {
+        return <span key={index} className="text-green-600 font-bold">{part}</span>
+      }
+      return part
+    })
+  }
 
-function ResultsDisplay({ comparison }) {
-  // Phase 2: Show placeholder
-  // Phase 3: Will receive real calculation data and format the trade-off question
+  // Helper function to highlight time amounts in blue
+  const highlightTime = (text) => {
+    return text.split(/(\d+\s*(?:minute|minutes|min))/).map((part, index) => {
+      if (part.match(/\d+\s*(?:minute|minutes|min)/)) {
+        return <span key={index} className="text-blue-600 font-bold">{part}</span>
+      }
+      return part
+    })
+  }
+
+  // Combined highlighting function
+  const formatMessage = (message) => {
+    // First split by dollar amounts
+    const parts = message.split(/(\$[\d.]+|\d+\s*(?:minute|minutes|min))/)
+
+    return parts.map((part, index) => {
+      if (part.match(/\$[\d.]+/)) {
+        return <span key={index} className="text-green-600 font-bold">{part}</span>
+      } else if (part.match(/\d+\s*(?:minute|minutes|min)/)) {
+        return <span key={index} className="text-blue-600 font-bold">{part}</span>
+      }
+      return <span key={index}>{part}</span>
+    })
+  }
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-lg shadow-lg">
@@ -25,18 +58,17 @@ function ResultsDisplay({ comparison }) {
         <h2 className="text-3xl font-bold text-gray-800">
           Your Results
         </h2>
-        <p className="text-lg text-gray-600">
-          {comparison ? (
-            // Phase 3: Format trade-off message based on comparison data
-            <span className="text-2xl font-semibold">
-              Trade-off question will appear here
-            </span>
+        <div className="text-lg text-gray-600">
+          {calculation ? (
+            <p className="text-2xl md:text-3xl font-semibold text-gray-800 leading-relaxed">
+              {formatMessage(calculation.message)}
+            </p>
           ) : (
             <span className="text-gray-400">
               Fill in all fields to see your comparison
             </span>
           )}
-        </p>
+        </div>
       </div>
     </div>
   )
