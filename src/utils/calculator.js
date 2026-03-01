@@ -2,6 +2,8 @@
  * Calculate total cost for filling up at a gas station
  * Includes cost of fuel AND gas used during round-trip to station
  *
+ * Phase 4: Added defensive checks to prevent division by zero and invalid inputs
+ *
  * @param {Object} params - Calculation parameters
  * @param {number} params.tankSize - Vehicle tank size in gallons
  * @param {number} params.mpg - Vehicle miles per gallon
@@ -10,6 +12,16 @@
  * @returns {Object} - { fuelCost, tripGasCost, totalCost }
  */
 export function calculateStationCost({ tankSize, mpg, price, distance }) {
+  // Defensive checks - prevent invalid operations (Phase 4)
+  if (!tankSize || !mpg || !price || tankSize <= 0 || mpg <= 0 || price <= 0) {
+    return { fuelCost: 0, tripGasCost: 0, totalCost: 0 }
+  }
+
+  // Allow distance to be 0 (on-site stations)
+  if (distance < 0) {
+    return { fuelCost: 0, tripGasCost: 0, totalCost: 0 }
+  }
+
   // Cost to fill the tank
   const fuelCost = tankSize * price
 
@@ -17,6 +29,7 @@ export function calculateStationCost({ tankSize, mpg, price, distance }) {
   const tripDistance = distance * 2
 
   // Gas used during the trip to/from station
+  // Division by mpg is safe because we checked mpg > 0 above
   const tripGasCost = (tripDistance / mpg) * price
 
   // Total cost = fillup + trip gas
@@ -32,6 +45,8 @@ export function calculateStationCost({ tankSize, mpg, price, distance }) {
 /**
  * Compare two gas stations and return savings/time tradeoff
  *
+ * Phase 4: Added defensive checks for invalid inputs
+ *
  * @param {Object} station1Result - Result from calculateStationCost for station 1
  * @param {Object} station2Result - Result from calculateStationCost for station 2
  * @param {number} time1 - Drive time to station 1 in minutes (round-trip)
@@ -39,6 +54,18 @@ export function calculateStationCost({ tankSize, mpg, price, distance }) {
  * @returns {Object} - { savings, timeDiff, cheaperStation, isNearEqual }
  */
 export function compareStations(station1Result, station2Result, time1, time2) {
+  // Defensive checks - ensure we have valid results
+  if (!station1Result || !station2Result || station1Result.totalCost == null || station2Result.totalCost == null) {
+    return {
+      savings: 0,
+      timeDiff: 0,
+      cheaperStation: 1,
+      isNearEqual: true,
+      station1TotalCost: 0,
+      station2TotalCost: 0
+    }
+  }
+
   const savings = Math.abs(station1Result.totalCost - station2Result.totalCost)
   const timeDiff = Math.abs(time1 - time2)
 
@@ -107,6 +134,8 @@ export function formatTradeoffMessage(comparison, station1Name, station2Name, ti
 /**
  * Check if all required fields are filled and valid
  *
+ * Phase 4: Enhanced with range validation matching the standard ranges
+ *
  * @param {Object} vehicleData - { name, tankSize, mpg }
  * @param {Object} station1 - { price, distance, time }
  * @param {Object} station2 - { price, distance, time }
@@ -118,7 +147,15 @@ export function areInputsValid(vehicleData, station1, station2) {
     return false
   }
 
-  if (vehicleData.tankSize <= 0 || vehicleData.mpg <= 0) {
+  const tankSize = parseFloat(vehicleData.tankSize)
+  const mpg = parseFloat(vehicleData.mpg)
+
+  // Validate against standard ranges
+  if (isNaN(tankSize) || tankSize < 1 || tankSize > 50) {
+    return false
+  }
+
+  if (isNaN(mpg) || mpg < 1 || mpg > 150) {
     return false
   }
 
@@ -127,7 +164,19 @@ export function areInputsValid(vehicleData, station1, station2) {
     return false
   }
 
-  if (station1.price <= 0 || station1.distance < 0 || station1.time < 0) {
+  const price1 = parseFloat(station1.price)
+  const distance1 = parseFloat(station1.distance)
+  const time1 = parseFloat(station1.time)
+
+  if (isNaN(price1) || price1 < 0.01 || price1 > 20) {
+    return false
+  }
+
+  if (isNaN(distance1) || distance1 < 0 || distance1 > 100) {
+    return false
+  }
+
+  if (isNaN(time1) || time1 < 0 || time1 > 300) {
     return false
   }
 
@@ -136,7 +185,19 @@ export function areInputsValid(vehicleData, station1, station2) {
     return false
   }
 
-  if (station2.price <= 0 || station2.distance < 0 || station2.time < 0) {
+  const price2 = parseFloat(station2.price)
+  const distance2 = parseFloat(station2.distance)
+  const time2 = parseFloat(station2.time)
+
+  if (isNaN(price2) || price2 < 0.01 || price2 > 20) {
+    return false
+  }
+
+  if (isNaN(distance2) || distance2 < 0 || distance2 > 100) {
+    return false
+  }
+
+  if (isNaN(time2) || time2 < 0 || time2 > 300) {
     return false
   }
 

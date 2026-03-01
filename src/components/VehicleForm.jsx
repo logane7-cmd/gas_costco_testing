@@ -4,14 +4,11 @@ import Button from './ui/Button'
 /**
  * VehicleForm Component
  *
- * Phase 3 implementation with:
+ * Phase 4 implementation with:
  * - Controlled components using props from App.jsx
  * - Google search button for tank size lookup
  * - Real-time state updates via onChange callback
- *
- * Phase 4 will add:
- * - Inline validation error messages
- * - Enhanced error handling
+ * - Inline validation error messages for out-of-range inputs
  *
  * @param {Object} props
  * @param {Object} props.vehicleData - Current vehicle data { name, tankSize, mpg }
@@ -23,6 +20,25 @@ function VehicleForm({ vehicleData = { name: '', tankSize: '', mpg: '' }, onChan
       const query = encodeURIComponent(`${vehicleData.name} gas tank size`)
       window.open(`https://google.com/search?q=${query}`, '_blank', 'noopener,noreferrer')
     }
+  }
+
+  // Validation logic - only show errors if field has a value
+  const getTankSizeError = () => {
+    if (!vehicleData.tankSize) return null
+    const value = parseFloat(vehicleData.tankSize)
+    if (isNaN(value)) return "Tank size must be a number"
+    if (value < 1) return "Tank size must be at least 1 gallon"
+    if (value > 50) return "Tank size must be 50 gallons or less"
+    return null
+  }
+
+  const getMpgError = () => {
+    if (!vehicleData.mpg) return null
+    const value = parseFloat(vehicleData.mpg)
+    if (isNaN(value)) return "MPG must be a number"
+    if (value < 1) return "MPG must be at least 1"
+    if (value > 150) return "MPG must be 150 or less"
+    return null
   }
 
   return (
@@ -50,6 +66,7 @@ function VehicleForm({ vehicleData = { name: '', tankSize: '', mpg: '' }, onChan
             max={50}
             step={0.1}
             inputMode="decimal"
+            error={getTankSizeError()}
           />
         </div>
         <Button
@@ -73,6 +90,7 @@ function VehicleForm({ vehicleData = { name: '', tankSize: '', mpg: '' }, onChan
         max={150}
         step={0.1}
         inputMode="decimal"
+        error={getMpgError()}
       />
     </div>
   )
