@@ -1,3 +1,4 @@
+import { Car, Search } from 'lucide-react'
 import Input from './ui/Input'
 import Button from './ui/Button'
 
@@ -42,8 +43,29 @@ function VehicleForm({ vehicleData = { name: '', tankSize: '', mpg: '' }, onChan
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-      <h2 className="text-2xl font-semibold text-gray-800">Your Vehicle</h2>
+    <div
+      className="bg-white p-6 md:p-8 rounded-2xl space-y-5 animate-slideInUp border-2 border-transparent hover:border-blue-100 transition-all"
+      style={{
+        boxShadow: 'var(--shadow-lg)',
+      }}
+    >
+      <div className="flex items-center gap-3 mb-2">
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center"
+          style={{ background: 'var(--color-primary)' }}
+        >
+          <Car size={22} className="text-white" strokeWidth={2.5} />
+        </div>
+        <h2
+          className="text-2xl md:text-3xl font-bold"
+          style={{
+            fontFamily: 'var(--font-display)',
+            color: 'var(--color-text)'
+          }}
+        >
+          Your Vehicle
+        </h2>
+      </div>
 
       <Input
         label="Vehicle Name"
@@ -76,7 +98,7 @@ function VehicleForm({ vehicleData = { name: '', tankSize: '', mpg: '' }, onChan
           className="mb-1"
           title="Search for tank size"
         >
-          🔍
+          <Search size={18} />
         </Button>
       </div>
 

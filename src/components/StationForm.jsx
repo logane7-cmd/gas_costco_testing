@@ -1,3 +1,4 @@
+import { Store, Fuel } from 'lucide-react'
 import Input from './ui/Input'
 
 /**
@@ -14,6 +15,21 @@ import Input from './ui/Input'
  * @param {Function} props.onChange - Callback for field changes: (field, value) => void
  */
 function StationForm({ stationName, stationData = { price: '', distance: '', time: '' }, onChange }) {
+  // Theme colors based on station - new blue/coral palette
+  const isCostco = stationName === 'Costco'
+  const theme = isCostco ? {
+    icon: Store,
+    bgColor: 'bg-red-50',
+    borderColor: 'border-red-200',
+    hoverBorderColor: 'hover:border-red-300',
+    accentColor: 'var(--color-coral)'
+  } : {
+    icon: Fuel,
+    bgColor: 'bg-blue-50',
+    borderColor: 'border-blue-200',
+    hoverBorderColor: 'hover:border-blue-300',
+    accentColor: 'var(--color-primary)'
+  }
 
   // Validation logic - only show errors if field has a value
   const getPriceError = () => {
@@ -44,8 +60,37 @@ function StationForm({ stationName, stationData = { price: '', distance: '', tim
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
-      <h2 className="text-xl font-semibold text-gray-800">{stationName}</h2>
+    <div
+      className={`bg-white p-6 md:p-8 rounded-2xl space-y-5 border-2 ${theme.borderColor} ${theme.hoverBorderColor} transition-all animate-slideInUp`}
+      style={{
+        boxShadow: 'var(--shadow-lg)',
+        animationDelay: '150ms'
+      }}
+    >
+      {/* Station header with icon and colored accent */}
+      <div className="flex items-center gap-3 mb-2">
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center"
+          style={{ background: theme.accentColor }}
+        >
+          <theme.icon size={22} className="text-white" strokeWidth={2.5} />
+        </div>
+        <div className="flex-1">
+          <h2
+            className="text-xl md:text-2xl font-bold"
+            style={{
+              fontFamily: 'var(--font-display)',
+              color: 'var(--color-text)'
+            }}
+          >
+            {stationName}
+          </h2>
+          <div
+            className="h-1 w-16 rounded-full mt-1"
+            style={{ backgroundColor: theme.accentColor }}
+          />
+        </div>
+      </div>
 
       <Input
         label="Price per Gallon"

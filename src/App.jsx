@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Fuel, HelpCircle, Trash2 } from 'lucide-react'
 import WelcomeScreen from './components/WelcomeScreen'
 import VehicleForm from './components/VehicleForm'
 import StationForm from './components/StationForm'
@@ -130,37 +131,48 @@ function App() {
     <>
       {!hasSeenTutorial && <WelcomeScreen onDismiss={handleDismissWelcome} />}
 
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-2xl mx-auto p-4 md:p-8">
-          {/* Header */}
-          <div className="text-center mb-8 relative">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+      <div className="min-h-screen py-8 md:py-12">
+        <div className="max-w-3xl mx-auto px-4 md:px-8">
+          {/* Header with clean icon design */}
+          <div className="text-center mb-10 md:mb-14 relative animate-fadeIn">
+            {/* Fuel icon logo */}
+            <div className="flex justify-center mb-5">
+              <div
+                className="w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-periwinkle) 100%)',
+                }}
+              >
+                <Fuel size={48} className="text-white" strokeWidth={2} />
+              </div>
+            </div>
+
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3"
+              style={{
+                fontFamily: 'var(--font-display)',
+                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-periwinkle) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
               Gas Price Calculator
             </h1>
-            <p className="text-gray-600 mt-2">
-              Costco vs Local Station
+
+            <p className="text-lg md:text-xl font-medium" style={{ color: 'var(--color-text-muted)' }}>
+              Costco vs Local Station • Make smarter decisions
             </p>
-            {/* Help icon */}
+
+            {/* Help button with icon */}
             <button
               onClick={handleShowHelp}
-              className="absolute top-0 right-0 p-2 text-gray-600 hover:text-blue-600 transition-colors"
+              className="absolute top-0 right-0 p-3 rounded-xl hover:bg-white shadow-md transition-all hover:shadow-lg hover:scale-110 bg-white/80 backdrop-blur-sm"
               aria-label="Show help tutorial"
-              title="Show help tutorial"
+              title="Need help?"
+              style={{ color: 'var(--color-periwinkle)' }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
-                />
-              </svg>
+              <HelpCircle size={24} strokeWidth={2} />
             </button>
           </div>
 
@@ -201,12 +213,13 @@ function App() {
             <ResultsDisplay calculation={calculation} />
 
             {/* Clear All Button */}
-            <div className="text-center pt-4">
+            <div className="text-center pt-6 animate-fadeIn" style={{ animationDelay: '400ms' }}>
               <Button
                 onClick={handleClearAll}
                 variant="secondary"
-                className="px-6 py-2"
+                className="px-8 py-3 text-base inline-flex items-center gap-2"
               >
+                <Trash2 size={18} />
                 Clear All Data
               </Button>
             </div>
