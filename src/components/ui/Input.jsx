@@ -1,8 +1,12 @@
 /**
  * Reusable Input Component
  *
- * NOTE: This is a basic implementation for Phase 2.
- * Phase 3 will add: real-time validation, error state handling, localStorage integration
+ * Phase 5: Fully accessible input with:
+ * - Focus ring for keyboard navigation
+ * - Error state handling with red border
+ * - Mobile-optimized input modes (decimal keyboard)
+ * - Range validation (min/max)
+ * - Inline error messages
  */
 
 function Input({

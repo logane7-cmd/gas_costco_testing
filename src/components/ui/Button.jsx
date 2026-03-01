@@ -1,8 +1,12 @@
 /**
  * Reusable Button Component
  *
- * NOTE: This is a basic implementation for Phase 2.
- * Phase 3 will add: loading states, disabled states, additional variants
+ * Phase 5: Enhanced with full accessibility support
+ * - 44px minimum touch targets for mobile
+ * - Hover states for all variants
+ * - Focus states with visible ring for keyboard navigation
+ * - Disabled state with reduced opacity
+ * - Smooth transitions
  */
 
 function Button({
@@ -11,20 +15,22 @@ function Button({
   variant = "primary",
   type = "button",
   className = "",
+  disabled = false,
   ...props
 }) {
-  const baseStyles = "px-4 py-2 rounded-lg font-medium transition min-h-[44px] min-w-[44px]"
+  const baseStyles = "px-4 py-2 rounded-lg font-medium transition-all min-h-[44px] min-w-[44px] focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
 
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
-    danger: "bg-red-600 text-white hover:bg-red-700",
+    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
+    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500",
+    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
   }
 
   return (
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled}
       className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     >
